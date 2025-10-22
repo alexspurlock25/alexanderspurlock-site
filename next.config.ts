@@ -1,33 +1,13 @@
-import postgres from 'postgres';
+import type { NextConfig } from 'next';
 
-export const sql = postgres(process.env.POSTGRES_URL, {
-  ssl: 'allow',
-});
-
-const nextConfig = {
+const nextConfig: NextConfig = {
   logging: {
     fetches: {
       fullUrl: true,
     },
   },
   transpilePackages: ['next-mdx-remote'],
-  async redirects() {
-    if (!process.env.POSTGRES_URL) {
-      return [];
-    }
-
-    let redirects = await sql`
-      SELECT source, destination, permanent
-      FROM redirects;
-    `;
-
-    return redirects.map(({ source, destination, permanent }) => ({
-      source,
-      destination,
-      permanent: !!permanent,
-    }));
-  },
-  headers() {
+  async headers() {
     return [
       {
         source: '/(.*)',
@@ -38,14 +18,14 @@ const nextConfig = {
 };
 
 const ContentSecurityPolicy = `
-    default-src 'self' vercel.live;
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com;
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
     img-src * blob: data:;
     media-src 'none';
-    connect-src *;
+    connect-src 'self';
     font-src 'self' data:;
-    frame-src 'self' *.codesandbox.io vercel.live;
+    frame-src 'self';
 `;
 
 const securityHeaders = [

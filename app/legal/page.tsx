@@ -1,16 +1,11 @@
-import Link from 'next/link'
-import { getLegalContent } from 'app/db/blog'
-
-export const metadata = {
-  title: 'Blog',
-  description: 'Read my thoughts on software development, design, and more.',
-};
+import Link from 'next/link';
+import { getLegalContent } from '@/db/mdx-reader';
 
 export default function LegalHomePage() {
-  let legalContent = getLegalContent();
+  const legalContent = getLegalContent();
 
   return (
-    <section>
+    <section className="max-w-3xl mx-auto">
       <h1 className="font-medium text-2xl mb-8 tracking-tighter">
         documents for my apps
       </h1>
@@ -30,7 +25,7 @@ export default function LegalHomePage() {
             href={`/legal/${post.slug}`}
           >
             <div className="w-full flex flex-col">
-              <p className="text-neutral-900 dark:text-neutral-100 tracking-tight">
+              <p className="text-neutral-900 tracking-tight">
                 {post.metadata.title}
               </p>
             </div>
